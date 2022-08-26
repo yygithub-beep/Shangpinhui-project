@@ -1,10 +1,10 @@
 import { reqGoodsInfo,reqAddOrUpdateShopCart} from "@/api"
 // 封装游客身份模块uuid--->生成一个随机的字符串（不能变了）
-// import {getUUID} from '@/utils/uuid_token'
+import {getUUID} from '@/utils/uuid_token'
 const state={
     goodInfo:{},
     // 游客的临时身份
-    // uuid_token:getUUID()
+    uuid_token:getUUID()
 }
 const mutations={
     GETGOODINFO(state,goodInfo){
@@ -19,7 +19,7 @@ const actions={
         commit('GETGOODINFO',result.data)
        }
     },
-    // 将产品添加到购物车中
+    // 将产品添加到购物车中||修改某一个产品的个数
     async addOrUpdateShopCart({commit},{skuId,skuNum}){
         // 加入购物车返回返回的解构
         // 加入购物车以后（发请求）前台将参数带给服务器
