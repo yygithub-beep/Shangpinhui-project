@@ -37,7 +37,7 @@
             type="text"
             id="autocomplete"
             class="input-error input-xxlarge"
-            v-model="keyWord"
+            v-model="keyword"
           />
           <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">
             搜索
@@ -53,24 +53,32 @@
     name:'',
     data() {
       return {
-        keyWord:''
+        keyword:''
       }
     },
     methods: {
       // 搜索按钮的回调函数：需要向search路由进行跳转
       goSearch(){
+        console.log(this.keyword);
         // 第一种：字符串形式
         // this.$router.push('/search/'+this.keyWord+'?k='+this.keyWord.toUpperCase())
         // 第二种：模板字符串
         // this.$router.push(`/search/${this.keyWord}?k=${this.keyWord.toUpperCase()}`)
-        // 第三种：对象写法
-        this.$router.push({
-          name:'search',
-          params:{keyWord:this.keyWord},
-          query:{k:this.keyWord.toUpperCase()}
-        })
+        // 第三种：对象写法（加上undefined是因为路径中采取了占位，如果传递的是空串，可保证路径完整）
+        if(this.$route.query){
+          // 代表的是如果有query参数也带过去
+          let location= {name:'search',params:{keyword:this.keyword||undefined}}
+          location.query=this.$route.query
+          this.$router.push(location)
+        }
       }
       
+    },
+    mounted() {
+      // 通过全局事件总线清除关键字
+      this.$bus.$on('clear',()=>{
+        this.keyword=''
+      })
     },
   };
 </script>
