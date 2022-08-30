@@ -1,5 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
+  // 关闭map文件自动打包
+  productionSourceMap:false,
   transpileDependencies: true,
   // 关闭eslint校验工具
   lintOnSave:false,

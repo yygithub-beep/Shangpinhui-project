@@ -62,11 +62,15 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllChecked" />
+        <input 
+          class="chooseAll"
+          type="checkbox" 
+          :checked="isAllChecked&&cartInfoList.length>0" 
+          @change="updateAllCartChecked" />
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteAllCheckedCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -77,7 +81,7 @@
           <i class="summoney">{{ totalPrice }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <router-link class="sum-btn" to="/trade">结算</router-link>
         </div>
       </div>
     </div>
@@ -149,6 +153,28 @@
           this.getData()
         } catch (error) {
           // 如果失败提示
+          alert(error.message)
+        }
+      },
+      // 删除所有选中的商品
+      async deleteAllCheckedCart(){
+        try {
+          // 派发一个action
+          await this.$store.dispatch('deleteAllCheckedCart')
+          // 再发一次请求获取购物车列表
+          this.getData()
+        } catch (error) {
+          alert(error.message)
+        }
+      },
+      // 修改全部产品的权重状态
+      async updateAllCartChecked(event){
+        try {
+          let checked=event.target.checked?'1':'0'
+          // 派发action---通知仓库
+          await this.$store.dispatch('updateAllCartIsChecked',checked)
+          this.getData()
+        } catch (error) {
           alert(error.message)
         }
       }

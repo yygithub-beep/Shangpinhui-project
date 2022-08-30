@@ -5,15 +5,28 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <!-- 未登录 -->
+          <p v-if="!userName">
             <span>请</span>
             <!-- 声明式导航：务必要有to属性 -->
             <router-link to="/login">登录</router-link>
             <router-link class="register" to="/register">免费注册</router-link>
           </p>
+          <!-- 登录了 -->
+          <p v-else>
+            <a>{{userName}}</a>
+            <a class="register" @click="logout">退出登录</a>
+          </p>
         </div>
         <div class="typeList">
-          <a href="###">我的订单</a>
+          <router-link to="/center/myOrder">我的订单</router-link>
+<!--           <router-link >我的购物车</router-link>
+          <router-link >我的尚品汇</router-link>
+          <router-link >尚品汇会员</router-link>
+          <router-link >企业采购</router-link>
+          <router-link >关注尚品汇</router-link>
+          <router-link >合作招商</router-link>
+          <router-link >合作招商</router-link> -->
           <a href="###">我的购物车</a>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
@@ -71,14 +84,29 @@
           location.query=this.$route.query
           this.$router.push(location)
         }
-      }
-      
+      },
+      async logout(){
+        // 退出登录需要做的事：1.发请求通知服务器退出登录【清除一些数据：token】2.清除项目中的数据【userInfo、token】
+        try {
+          // 如果退出成功，需要回到首页
+          await this.$store.dispatch('userLogout')
+          this.$router.push('/home')
+        } catch (error) {
+          
+        }
+      }      
     },
     mounted() {
       // 通过全局事件总线清除关键字
       this.$bus.$on('clear',()=>{
         this.keyword=''
       })
+    },
+    computed: {
+      userName(){
+        // 用户名信息
+        return this.$store.state.user.userInfo.name
+      }
     },
   };
 </script>

@@ -22,6 +22,10 @@ requests.interceptors.request.use((config)=>{
         // 给请求头添加一个字段（和后台老师商量好的userTempId）---因为获取购物车列表的数据接口不能带参数，所以在请求头里带购物数据
         config.headers.userTempId=store.state.detail.uuid_token
     }
+    // 需要携带token带个服务器【token同样地不能瞎写】
+    if(store.state.user.token){
+        config.headers.token=store.state.user.token
+    }
     // 进度条开始
     nprogress.start()
     return config
